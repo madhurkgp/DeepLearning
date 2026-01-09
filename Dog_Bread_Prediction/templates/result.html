@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+        
+        .prediction-result {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+        }
+        
+        .breed-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .confidence {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .confidence-bar {
+            background: rgba(255,255,255,0.3);
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            background: white;
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+        
+        .back-btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .back-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .file-info {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">🎉</div>
+        <h1>Prediction Complete!</h1>
+        
+        <div class="prediction-result">
+            <div class="breed-name">{{ prediction }}</div>
+            <div class="confidence">
+                Confidence: {{ "%.1f"|format(confidence) }}%
+            </div>
+            <div class="confidence-bar">
+                <div class="confidence-fill" style="width: {{ confidence }}%"></div>
+            </div>
+        </div>
+        
+        <div class="file-info">
+            Analyzed: {{ filename }}
+        </div>
+        
+        <a href="/back" class="back-btn">Try Another Image</a>
+    </div>
+    
+    <script>
+        // Animate confidence bar on page load
+        window.addEventListener('load', function() {
+            const fill = document.querySelector('.confidence-fill');
+            setTimeout(() => {
+                fill.style.width = '{{ confidence }}%';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
