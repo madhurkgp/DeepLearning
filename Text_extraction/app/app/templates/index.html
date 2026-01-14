@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Extraction App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .upload-section, .preview-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .file-upload-wrapper {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .file-upload-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .file-upload-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .file-name {
+            margin-top: 10px;
+            color: #666;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .extract-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .extract-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        }
+
+        .extract-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .preview-image img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 10px;
+        }
+
+        .result-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+        }
+
+        .result-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .extracted-text {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 150px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            color: #333;
+            line-height: 1.6;
+            border: 2px solid #e9ecef;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📝 Text Extraction App</h1>
+            <p class="subtitle">Extract text from images using OCR technology</p>
+        </header>
+
+        <form method="post" enctype="multipart/form-data" id="uploadForm">
+            <div class="main-content">
+                <div class="upload-section">
+                    <h2 class="section-title">📤 Upload Image</h2>
+                    
+                    <div class="file-upload-wrapper">
+                        <input type="file" name="image_upload" id="image_upload" class="file-upload-input" accept="image/*" required>
+                        <label for="image_upload" class="file-upload-label">
+                            Choose Image File
+                        </label>
+                        <div class="file-name" id="file-name">No file selected</div>
+                    </div>
+
+                    <button type="submit" class="extract-btn" id="extractBtn">
+                        Extract Text
+                    </button>
+
+                    <div class="loading" id="loading">
+                        <div class="spinner"></div>
+                        <p style="margin-top: 10px; color: #666;">Processing image...</p>
+                    </div>
+                </div>
+
+                <div class="preview-section">
+                    <h2 class="section-title">🖼️ Image Preview</h2>
+                    <div class="preview-image" id="previewContainer">
+                        {% if full_filename %}
+                            <img src="{{ url_for('static', filename=full_filename) }}" alt="Uploaded image">
+                        {% else %}
+                            <div>No image uploaded</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        {% if text %}
+        <div class="result-section show">
+            <h2 class="result-title">📄 Extracted Text</h2>
+            <div class="extracted-text">
+                {% for line in text %}
+                    {% if line.strip() %}
+{{ line }}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('image_upload');
+        const fileName = document.getElementById('file-name');
+        const form = document.getElementById('uploadForm');
+        const loading = document.getElementById('loading');
+        const extractBtn = document.getElementById('extractBtn');
+
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                fileName.textContent = this.files[0].name;
+                
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewContainer = document.getElementById('previewContainer');
+                    previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                };
+                reader.readAsDataURL(this.files[0]);
+            } else {
+                fileName.textContent = 'No file selected';
+            }
+        });
+
+        form.addEventListener('submit', function() {
+            loading.classList.add('show');
+            extractBtn.disabled = true;
+            extractBtn.textContent = 'Processing...';
+        });
+    </script>
+</body>
+</html>
