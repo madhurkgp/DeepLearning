@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Detection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+        
+        .upload-form {
+            margin-top: 2rem;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .file-input-button {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .file-input-button:hover {
+            background: #45a049;
+        }
+        
+        .submit-button {
+            width: 100%;
+            padding: 1rem;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-button:hover {
+            background: #1976D2;
+        }
+        
+        .error {
+            color: #f44336;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background: #ffebee;
+            border-radius: 5px;
+            border-left: 4px solid #f44336;
+        }
+        
+        .file-info {
+            margin-top: 1rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Plant Disease Detection</h1>
+        <p class="subtitle">Upload an image of a plant leaf to detect diseases</p>
+        
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        
+        <form action="/predict" method="post" enctype="multipart/form-data" class="upload-form">
+            <div class="file-input-wrapper">
+                <input type="file" name="file" accept="image/*" class="file-input" id="fileInput" onchange="updateFileName()">
+                <label for="fileInput" class="file-input-button">
+                    Choose Image File
+                </label>
+            </div>
+            <div class="file-info" id="fileInfo">No file selected</div>
+            <button type="submit" class="submit-button">Predict Disease</button>
+        </form>
+    </div>
+    
+    <script>
+        function updateFileName() {
+            const fileInput = document.getElementById('fileInput');
+            const fileInfo = document.getElementById('fileInfo');
+            
+            if (fileInput.files.length > 0) {
+                fileInfo.textContent = `Selected: ${fileInput.files[0].name}`;
+            } else {
+                fileInfo.textContent = 'No file selected';
+            }
+        }
+    </script>
+</body>
+</html>
