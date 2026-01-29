@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="#" class="brand-logo">Image Classification</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="grid">
+            <div class="upload-section">
+                <form action="/" method="post" enctype="multipart/form-data" id="uploadForm">
+                    <div class="upload-area" onclick="document.getElementById('image_upload').click()">
+                        <label for="image_upload" class="upload-label">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            Click to upload or drag and drop
+                            <br><small>PNG, JPG, GIF up to 10MB</small>
+                        </label>
+                        <input type="file" id="image_upload" name="image_upload" class="file-input" accept="image/*">
+                    </div>
+                    
+                    <div id="fileInfo" style="margin-top: 1rem; color: #666; display: none;">
+                        <strong>Selected file:</strong> <span id="fileName"></span>
+                    </div>
+                    
+                    <button type="submit" class="btn" id="predictBtn" disabled>
+                        <span id="btnText">Predict Image</span>
+                        <span id="btnLoading" class="loading" style="display: none;"></span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="result-section">
+                {% if full_filename and full_filename != 'images/white_bg.jpg' %}
+                    <div>
+                        <img src="{{ url_for('static', filename=full_filename) }}" alt="Uploaded image" class="result-image">
+                        <div class="prediction-label">Prediction Result</div>
+                        <div class="prediction-result">{{ pred or 'Processing...' }}</div>
+                    </div>
+                {% else %}
+                    <div style="text-align: center; color: #999;">
+                        <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.3;">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                        <p style="margin-top: 1rem;">Upload an image to see classification results</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('image_upload');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const predictBtn = document.getElementById('predictBtn');
+        const uploadForm = document.getElementById('uploadForm');
+        const uploadArea = document.querySelector('.upload-area');
+
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                fileName.textContent = file.name;
+                fileInfo.style.display = 'block';
+                predictBtn.disabled = false;
+            }
+        });
+
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#667eea';
+            this.style.background = '#f8f9ff';
+        });
+
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#ddd';
+            this.style.background = 'transparent';
+        });
+
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#ddd';
+            this.style.background = 'transparent';
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type.startsWith('image/')) {
+                fileInput.files = files;
+                const event = new Event('change', { bubbles: true });
+                fileInput.dispatchEvent(event);
+            }
+        });
+
+        uploadForm.addEventListener('submit', function() {
+            document.getElementById('btnText').style.display = 'none';
+            document.getElementById('btnLoading').style.display = 'inline-block';
+            predictBtn.disabled = true;
+        });
+    </script>
+</body>
+</html>
