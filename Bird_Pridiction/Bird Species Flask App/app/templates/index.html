@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bird Species Prediction App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Bird Species Prediction App</h1>
+    </nav>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="content-grid">
+                <div class="upload-section">
+                    <h2>Upload Bird Image</h2>
+                    <form action="/" method="post" enctype="multipart/form-data" id="prediction-form">
+                        <div class="file-upload-wrapper">
+                            <input type="file" name="image_upload" id="image_upload" class="file-upload-input" accept="image/*" required>
+                            <label for="image_upload" class="file-upload-label">
+                                Choose Image
+                            </label>
+                            <div class="file-name" id="file-name">No file selected</div>
+                        </div>
+                        
+                        <button type="submit" class="predict-btn" id="predict-btn">
+                            Predict Species
+                        </button>
+                    </form>
+                </div>
+
+                <div class="result-section">
+                    <h2>Result</h2>
+                    <img src="{{ url_for('static', filename=full_filename) }}" alt="Bird image" class="image-preview" id="preview-image">
+                    
+                    {% if pred %}
+                    <div class="prediction-result">
+                        <h3>{{ pred }}</h3>
+                        <p>Predicted bird species</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('image_upload').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || 'No file selected';
+            document.getElementById('file-name').textContent = fileName;
+            
+            // Preview the selected image
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview-image').src = e.target.result;
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        document.getElementById('prediction-form').addEventListener('submit', function() {
+            const btn = document.getElementById('predict-btn');
+            btn.innerHTML = '<span class="loading"></span> Predicting...';
+            btn.disabled = true;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Swap - AI Powered</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Face Swap</h1>
+            <p>Upload two images and watch the magic happen</p>
+        </header>
+
+        <main class="main-content">
+            <div class="error-message"></div>
+            <div class="success-message"></div>
+            
+            <form action="/" method="post" enctype="multipart/form-data" id="swap-form">
+                <div class="upload-grid">
+                    <div class="upload-box">
+                        <label class="upload-label">Source Image</label>
+                        <div class="image-preview" id="source-preview-container">
+                            <img id="source-preview" src="{{ url_for('static', filename=source) }}" alt="Source">
+                        </div>
+                        <div class="file-input-wrapper">
+                            <input type="file" name="source_image" id="source_image" accept="image/*" required>
+                            <label for="source_image" class="file-input-label">Choose Image</label>
+                        </div>
+                        <div class="file-name" id="source_name">No file selected</div>
+                    </div>
+
+                    <div class="upload-box">
+                        <label class="upload-label">Destination Image</label>
+                        <div class="image-preview" id="destination-preview-container">
+                            <img id="destination-preview" src="{{ url_for('static', filename=destination) }}" alt="Destination">
+                        </div>
+                        <div class="file-input-wrapper">
+                            <input type="file" name="destination_image" id="destination_image" accept="image/*" required>
+                            <label for="destination_image" class="file-input-label">Choose Image</label>
+                        </div>
+                        <div class="file-name" id="destination_name">No file selected</div>
+                    </div>
+
+                    <div class="upload-box">
+                        <label class="upload-label">Result</label>
+                        <div class="image-preview">
+                            <img id="result-preview" src="{{ url_for('static', filename=result) }}" alt="Result">
+                        </div>
+                        <div class="action-buttons">
+                            <button type="submit" id="submit" class="swap-btn">Swap Faces</button>
+                            {% if result != 'images/white_bg.jpg' %}
+                            <a href="{{ url_for('static', filename=result) }}" download="face-swap-result.png" class="download-btn">
+                                Download Result
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Processing your images...</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

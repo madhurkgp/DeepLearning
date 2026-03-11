@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digit Classification App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .upload-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 30px;
+        }
+        
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .result {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .result h2 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+        
+        .digit-result {
+            font-size: 3em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+        
+        .placeholder {
+            color: #999;
+            font-style: italic;
+            padding: 40px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px dashed #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔢 Digit Classifier</h1>
+        <p class="subtitle">Upload an image to classify handwritten digits</p>
+        
+        <a href="{% url 'upload' %}" class="upload-btn">
+            📤 Upload Image
+        </a>
+        
+        {% if response %}
+            <div class="result">
+                <h2>Prediction Result:</h2>
+                <div class="digit-result">{{ response }}</div>
+                <p>The model predicts this digit as <strong>{{ response }}</strong></p>
+            </div>
+        {% else %}
+            <div class="placeholder">
+                <p>📷 No image uploaded yet</p>
+                <p>Click "Upload Image" to get started</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

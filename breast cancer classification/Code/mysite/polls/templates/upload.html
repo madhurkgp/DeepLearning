@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Image - Breast Cancer Detection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-60px) translateY(-60px); }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(102, 126, 234, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #667eea;
+        }
+
+        .back-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateX(-3px);
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .logo i {
+            font-size: 24px;
+            color: white;
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .upload-form {
+            background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            border: 2px dashed #cbd5e0;
+            transition: all 0.3s ease;
+        }
+
+        .upload-form:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #4a5568;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+            color: #2d3748;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: white;
+            border: 2px dashed #cbd5e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 120px;
+            flex-direction: column;
+        }
+
+        .file-input-label:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .file-input-label i {
+            font-size: 48px;
+            color: #cbd5e0;
+            margin-bottom: 15px;
+        }
+
+        .file-input-text {
+            color: #4a5568;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .file-input-hint {
+            color: #718096;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .info-box {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .info-box h3 {
+            color: #2d3748;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-box li {
+            color: #4a5568;
+            font-size: 12px;
+            margin-bottom: 5px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .info-box li:before {
+            content: '•';
+            position: absolute;
+            left: 8px;
+            color: #667eea;
+        }
+
+        .error-list {
+            background: rgba(245, 101, 101, 0.1);
+            border: 1px solid rgba(245, 101, 101, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .error-list li {
+            color: #c53030;
+            font-size: 14px;
+            margin-bottom: 5px;
+            list-style-position: inside;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'homepage' %}" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-ribbon"></i>
+            </div>
+            <h1>Upload Histopathology Image</h1>
+            <p class="subtitle">Select a PNG image for breast cancer analysis</p>
+        </div>
+
+        <form method="post" action="" enctype="multipart/form-data" id="uploadForm">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+                <div class="error-list">
+                    <strong>Please correct the following errors:</strong>
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="upload-form">
+                <div class="form-group">
+                    <label for="{{ form.emo_name.id_for_label }}">Analysis Name</label>
+                    {{ form.emo_name }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.file.id_for_label }}">Histopathology Image</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="{{ form.file.id_for_label }}" name="{{ form.file.name }}" accept=".png" required>
+                        <label for="{{ form.file.id_for_label }}" class="file-input-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <div class="file-input-text">Click to upload or drag and drop</div>
+                            <div class="file-input-hint">PNG files only (Max size: 10MB)</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" name="pred_button" class="submit-btn">
+                <i class="fas fa-microscope"></i>
+                Analyze Image
+            </button>
+
+            <div class="info-box">
+                <h3>
+                    <i class="fas fa-info-circle"></i>
+                    Guidelines
+                </h3>
+                <ul>
+                    <li>Upload clear histopathology images</li>
+                    <li>Supported format: PNG</li>
+                    <li>Recommended resolution: 224x224 pixels</li>
+                    <li>Maximum file size: 10MB</li>
+                    <li>Ensure proper lighting and focus</li>
+                </ul>
+            </div>
+
+            <div class="loading" id="loadingIndicator">
+                <div class="spinner"></div>
+                <p style="color: #4a5568; font-size: 14px;">Analyzing image...</p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // File input enhancement
+        const fileInput = document.querySelector('input[type="file"]');
+        const fileLabel = document.querySelector('.file-input-label');
+        const form = document.getElementById('uploadForm');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+
+        fileInput.addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            if (fileName) {
+                fileLabel.querySelector('.file-input-text').textContent = fileName;
+                fileLabel.style.borderColor = '#667eea';
+                fileLabel.style.background = 'rgba(102, 126, 234, 0.05)';
+            }
+        });
+
+        // Drag and drop functionality
+        fileLabel.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#667eea';
+            this.style.background = 'rgba(102, 126, 234, 0.1)';
+        });
+
+        fileLabel.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#cbd5e0';
+            this.style.background = 'white';
+        });
+
+        fileLabel.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#cbd5e0';
+            this.style.background = 'white';
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                const event = new Event('change', { bubbles: true });
+                fileInput.dispatchEvent(event);
+            }
+        });
+
+        // Form submission with loading
+        form.addEventListener('submit', function() {
+            loadingIndicator.style.display = 'block';
+            form.style.opacity = '0.5';
+            form.style.pointerEvents = 'none';
+        });
+
+        // Form field styling
+        document.getElementById('{{ form.emo_name.id_for_label }}').className = 'form-control';
+        document.getElementById('{{ form.emo_name.id_for_label }}').placeholder = 'Enter a name for this analysis';
+    </script>
+</body>
+</html>

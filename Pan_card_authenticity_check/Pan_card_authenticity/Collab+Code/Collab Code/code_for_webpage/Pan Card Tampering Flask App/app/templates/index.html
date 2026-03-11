@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pan Card Tampering Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            ID Verifier
+        </a>
+        <span class="navbar-text">Pan Card Tampering Detection</span>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Verify Document Authenticity</h1>
+            <p>Upload a Pan Card image to check for potential tampering using structural similarity analysis.</p>
+        </div>
+
+        <div class="upload-card">
+            <form action="/" method="post" enctype="multipart/form-data" id="upload-form">
+                <div class="file-upload-wrapper">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">Drag & Drop or Click to Upload</div>
+                    <input type="file" name="file_upload" id="file_upload" accept="image/*" required>
+                </div>
+                <div id="file-name" class="file-name-display"></div>
+                
+                <div class="loader" id="loader"></div>
+                
+                <button type="submit" class="submit-btn" id="submit-btn">Analyze Image</button>
+            </form>
+        </div>
+
+        {% if pred %}
+        <div class="results-section">
+            <div class="results-header">
+                <h2>Analysis Results</h2>
+                <div class="score-badge">{{ pred }} Match</div>
+            </div>
+
+            <div class="images-grid">
+                <div class="image-card">
+                    <h3>Original Template</h3>
+                    <img src="{{ url_for('static', filename='original/image.jpg') }}" alt="Original Image">
+                </div>
+                <div class="image-card">
+                    <h3>Uploaded Image</h3>
+                    <img src="{{ url_for('static', filename='uploads/image.jpg') }}" alt="Uploaded Image">
+                </div>
+                <div class="image-card">
+                    <h3>Difference Map</h3>
+                    <img src="{{ url_for('static', filename='generated/image_diff.jpg') }}" alt="Difference Image">
+                </div>
+                <div class="image-card">
+                    <h3>Threshold Map</h3>
+                    <img src="{{ url_for('static', filename='generated/image_thresh.jpg') }}" alt="Threshold Image">
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <footer>
+        <p>Powered by Computer Vision & Structural Similarity Index (SSIM)</p>
+    </footer>
+
+    <script>
+        const fileInput = document.getElementById('file_upload');
+        const fileNameDisplay = document.getElementById('file-name');
+        const form = document.getElementById('upload-form');
+        const loader = document.getElementById('loader');
+        const submitBtn = document.getElementById('submit-btn');
+
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                fileNameDisplay.textContent = this.files[0].name;
+            } else {
+                fileNameDisplay.textContent = '';
+            }
+        });
+
+        form.addEventListener('submit', function() {
+            loader.style.display = 'block';
+            submitBtn.style.opacity = '0.7';
+            submitBtn.innerHTML = 'Analyzing...';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    padding: 40px 0;
+    color: white;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.main-content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+}
+
+.upload-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.upload-box {
+    text-align: center;
+}
+
+.image-preview {
+    width: 300px;
+    height: 300px;
+    border: 2px dashed #ddd;
+    border-radius: 15px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.image-preview:hover {
+    border-color: #667eea;
+    background: #f0f0ff;
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+.upload-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.file-input-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.file-input-wrapper input[type=file] {
+    position: absolute;
+    left: -9999px;
+}
+
+.file-input-label {
+    display: inline-block;
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    border: none;
+    font-size: 14px;
+}
+
+.file-input-label:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.file-name {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #666;
+    min-height: 16px;
+}
+
+.action-buttons {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.swap-btn {
+    padding: 15px 50px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+}
+
+.swap-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+}
+
+.swap-btn:active {
+    transform: translateY(-1px);
+}
+
+.download-btn {
+    padding: 10px 25px;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);
+}
+
+.loading {
+    display: none;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-message {
+    background: #ff6b6b;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    display: none;
+}
+
+.success-message {
+    background: #51cf66;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .upload-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .image-preview {
+        width: 250px;
+        height: 250px;
+    }
+    
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    .main-content {
+        padding: 20px;
+    }
+}

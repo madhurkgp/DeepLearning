@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Watermarking App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            padding: 40px;
+        }
+
+        .upload-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        input[type="file"] {
+            padding: 12px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        input[type="file"]:hover {
+            border-color: #5e72e4;
+            background: #f0f4ff;
+        }
+
+        input[type="text"] {
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #5e72e4;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .radio-option input[type="radio"] {
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(94, 114, 228, 0.3);
+        }
+
+        .preview-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border-radius: 12px;
+            min-height: 400px;
+        }
+
+        .preview-placeholder {
+            color: #6c757d;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 500px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 20px;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Image Watermarking App</h1>
+            <p>Add watermarks to your images with ease</p>
+        </header>
+
+        <main class="content">
+            <section class="upload-section">
+                <form action="/" method="post" enctype="multipart/form-data" id="watermarkForm">
+                    <div class="form-group">
+                        <label for="image_upload">Upload Image</label>
+                        <input type="file" name="image_upload" id="image_upload" accept="image/*" required>
+                    </div>
+
+                    <div class="form-group" id="logoUploadGroup">
+                        <label for="logo_upload">Upload Logo</label>
+                        <input type="file" name="logo_upload" id="logo_upload" accept="image/*">
+                    </div>
+
+                    <div class="form-group hidden" id="textInputGroup">
+                        <label for="text_mark">Watermark Text</label>
+                        <input type="text" name="text_mark" id="text_mark" placeholder="Enter watermark text">
+                    </div>
+
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="options" value="logo_watermark" id="logo_watermark" checked>
+                            <span>Logo Watermark</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="options" value="text_watermark" id="text_watermark">
+                            <span>Text Watermark</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Apply Watermark</button>
+                </form>
+            </section>
+
+            <section class="preview-section">
+                {% if full_filename %}
+                    <img src="{{ url_for('static', filename='uploads/' + full_filename.split('/')[-1]) }}" alt="Watermarked image" class="preview-image">
+                {% else %}
+                    <div class="preview-placeholder">
+                        <p>Your watermarked image will appear here</p>
+                    </div>
+                {% endif %}
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const logoWatermarkRadio = document.getElementById('logo_watermark');
+        const textWatermarkRadio = document.getElementById('text_watermark');
+        const logoUploadGroup = document.getElementById('logoUploadGroup');
+        const textInputGroup = document.getElementById('textInputGroup');
+
+        function toggleWatermarkType() {
+            if (logoWatermarkRadio.checked) {
+                logoUploadGroup.classList.remove('hidden');
+                textInputGroup.classList.add('hidden');
+                document.getElementById('logo_upload').required = true;
+                document.getElementById('text_mark').required = false;
+            } else {
+                logoUploadGroup.classList.add('hidden');
+                textInputGroup.classList.remove('hidden');
+                document.getElementById('logo_upload').required = false;
+                document.getElementById('text_mark').required = true;
+            }
+        }
+
+        logoWatermarkRadio.addEventListener('change', toggleWatermarkType);
+        textWatermarkRadio.addEventListener('change', toggleWatermarkType);
+
+        // Initialize
+        toggleWatermarkType();
+    </script>
+</body>
+</html>
+
