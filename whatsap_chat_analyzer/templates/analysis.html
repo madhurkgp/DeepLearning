@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select User for Analysis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .selection-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 480px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .user-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .selection-title {
+            color: #1a1a1a;
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+        
+        .selection-subtitle {
+            color: #6b7280;
+            font-weight: 400;
+            font-size: 1rem;
+        }
+        
+        .form-section {
+            margin-bottom: 32px;
+        }
+        
+        .form-label {
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: block;
+        }
+        
+        .form-select {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            outline: none;
+        }
+        
+        .btn-analyze {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-analyze:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+        
+        .btn-back {
+            background: transparent;
+            border: 2px solid #e5e7eb;
+            color: #6b7280;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .btn-back:hover {
+            border-color: #667eea;
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+            transform: translateY(-1px);
+        }
+        
+        .back-section {
+            text-align: center;
+            margin-top: 24px;
+        }
+        
+        .user-count {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .user-count-text {
+            color: #0c4a6e;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+        
+        .user-count-number {
+            color: #667eea;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="selection-container">
+        <div class="header-section">
+            <div class="user-icon">
+                <i class="bi bi-people"></i>
+            </div>
+            <h1 class="selection-title">Choose Analysis</h1>
+            <p class="selection-subtitle">Select a user or view overall group insights</p>
+        </div>
+        
+        <div class="user-count">
+            <p class="user-count-text">
+                Found <span class="user-count-number">{{ users|length - 1 }}</span> participants in this chat
+            </p>
+        </div>
+        
+        <form action="/analyze" method="post">
+            <div class="form-section">
+                <label for="user" class="form-label">
+                    <i class="bi bi-person-circle me-2"></i>Select Analysis Target
+                </label>
+                <select class="form-select" id="user" name="user" required>
+                    <option value="">Choose who to analyze...</option>
+                    {% for user in users %}
+                        {% if user == "Overall" %}
+                            <option value="{{ user }}" selected>
+                                📊 {{ user }} Analysis
+                            </option>
+                        {% else %}
+                            <option value="{{ user }}">👤 {{ user }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-analyze">
+                <i class="bi bi-bar-chart-line me-2"></i>Generate Insights
+            </button>
+        </form>
+        
+        <div class="back-section">
+            <a href="/" class="btn btn-back">
+                <i class="bi bi-arrow-left me-2"></i>Upload Different File
+            </a>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
