@@ -30,6 +30,10 @@ db.sqlite3
 *.pkl
 *.model
 
+# Exceptions - allow these specific files
+!Code/mysite/polls/breast-cancer-model.h5
+!Code/mysite/polls/image-generator-model.pkl
+
 # IDE
 .vscode/
 .idea/
